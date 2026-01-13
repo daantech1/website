@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Camera Grid - Skiien</title>
+
   <style>
     * {
       box-sizing: border-box;
@@ -12,6 +13,7 @@
 
     html, body {
       height: 100%;
+      overflow: hidden;
     }
 
     body {
@@ -28,50 +30,15 @@
       padding: 10px 16px;
       display: flex;
       align-items: center;
-      gap: 16px;
-    }
-
-    .logo {
-      font-weight: 700;
-      letter-spacing: 0.03em;
-    }
-
-    nav {
-      display: flex;
-      gap: 8px;
-      margin-left: auto;
-    }
-
-    .menu-btn {
-      padding: 6px 14px;
-      border-radius: 999px;
-      border: 1px solid transparent;
-      background: #1e293b;
-      color: #e5e7eb;
-      font-size: 14px;
-      cursor: pointer;
-      transition: 0.15s;
-    }
-
-    .menu-btn:hover {
-      background: #111827;
-      border-color: rgba(148, 163, 184, 0.6);
-    }
-
-    .menu-btn.active {
-      background: #22c55e;
-      color: #022c22;
-      border-color: #22c55e;
     }
 
     main {
       flex: 1;
-      display: flex;
-      min-height: 0; /* important for flex layouts */
+      min-height: 0;
     }
 
     .grid-container {
-      flex: 1;
+      height: 100%;
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       grid-template-rows: repeat(2, 1fr);
@@ -81,17 +48,39 @@
 
     .cam-cell {
       position: relative;
-      background: #020617;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: black;
     }
 
     iframe {
+      position: absolute;
+      inset: 0;
       width: 100%;
       height: 100%;
       border: none;
-      display: block;
     }
 
-    /* optie: responsief bij smalle schermen (1 kolom) */
+    /* Fullscreen knop */
+    .fullscreen-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      z-index: 10;
+      background: rgba(0,0,0,0.6);
+      color: white;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .fullscreen-btn:hover {
+      background: rgba(0,0,0,0.85);
+    }
+
     @media (max-width: 768px) {
       .grid-container {
         grid-template-columns: 1fr;
@@ -100,65 +89,49 @@
     }
   </style>
 </head>
+
 <body>
+
   <header>
-    <div class="logo">Camera Grid</div>
-    <nav>
-      <!-- Nu alleen Skiien, later kun je hier meer knoppen toevoegen -->
-      <button class="menu-btn active" data-section="skiien">Skiien</button>
-    </nav>
+    <strong>Camera Grid – Skiien</strong>
   </header>
 
   <main>
-    <!-- Sectie: Skiien -->
-    <section id="skiien" class="grid-container">
+    <section class="grid-container">
+
       <div class="cam-cell">
-        <iframe
-          src="https://www.feratel.com/en/webcams/austria/tyrol/finkenberg-penkenjoch"
-          loading="lazy"
-          allowfullscreen
-        ></iframe>
+        <button class="fullscreen-btn">⛶</button>
+        <iframe src="https://www.feratel.com/en/webcams/austria/tyrol/finkenberg-penkenjoch"></iframe>
       </div>
+
       <div class="cam-cell">
-        <iframe
-          src="https://www.feratel.com/nl/webcams/oostenrijk/tirol/mayrhofen-penkenbahn"
-          loading="lazy"
-          allowfullscreen
-        ></iframe>
+        <button class="fullscreen-btn">⛶</button>
+        <iframe src="https://www.feratel.com/nl/webcams/oostenrijk/tirol/mayrhofen-penkenbahn"></iframe>
       </div>
+
       <div class="cam-cell">
-        <iframe
-          src="https://www.feratel.com/en/webcams/austria/tyrol/hintertux-gefrorene-wand"
-          loading="lazy"
-          allowfullscreen
-        ></iframe>
+        <button class="fullscreen-btn">⛶</button>
+        <iframe src="https://www.feratel.com/en/webcams/austria/tyrol/hintertux-gefrorene-wand"></iframe>
       </div>
+
       <div class="cam-cell">
-        <iframe
-          src="https://www.feratel.com/en/webcams/austria/tyrol/hintertux-gefrorene-wand"
-          loading="lazy"
-          allowfullscreen
-        ></iframe>
+        <button class="fullscreen-btn">⛶</button>
+        <iframe src="https://www.feratel.com/en/webcams/austria/tyrol/hintertux-gefrorene-wand"></iframe>
       </div>
+
     </section>
   </main>
 
   <script>
-    // Klaar voor meerdere menu-items / sections in de toekomst.
-    const buttons = document.querySelectorAll(".menu-btn");
-    const sections = document.querySelectorAll("main > section");
-
-    buttons.forEach(btn => {
+    document.querySelectorAll(".fullscreen-btn").forEach(btn => {
       btn.addEventListener("click", () => {
-        buttons.forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-
-        const target = btn.dataset.section;
-        sections.forEach(sec => {
-          sec.style.display = (sec.id === target) ? "grid" : "none";
-        });
+        const cell = btn.parentElement;
+        if (cell.requestFullscreen) {
+          cell.requestFullscreen();
+        }
       });
     });
   </script>
+
 </body>
 </html>
