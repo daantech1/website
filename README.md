@@ -156,6 +156,14 @@ td, th {
   padding:6px 10px;
 }
 
+/* 🔧 FIX: REMOVE WHITE BLOCKS */
+pre,
+table,
+th,
+td {
+  background: transparent;
+}
+
 /* CURSOR */
 .cursor {
   display:inline-block;
@@ -278,7 +286,6 @@ https://www.roblox.com/games/132182877945966/Roblox-Flodder-RP
 <!-- PROJECTS -->
 <div id="projects" class="page">
 PROJECTS
-
 <pre class="projects-ascii">
       ____
  ____|    \
@@ -289,15 +296,9 @@ PROJECTS
 </pre>
 
 <div class="project-grid">
-  <div class="project-button" onclick="openProject('jammer')">
-    01. ESP32-C3 Super Mini Jammer
-  </div>
-  <div class="project-button" onclick="openProject('matrix')">
-    02. WiFi 8x8 Matrix Panel
-  </div>
-  <div class="project-button" onclick="openProject('tesla')">
-    03. Arduino Nano CC1101 Tesla Charging Port Opener
-  </div>
+  <div class="project-button" onclick="openProject('jammer')">01. ESP32-C3 Super Mini Jammer</div>
+  <div class="project-button" onclick="openProject('matrix')">02. WiFi 8x8 Matrix Panel</div>
+  <div class="project-button" onclick="openProject('tesla')">03. Arduino Nano CC1101 Tesla Charging Port Opener</div>
 </div>
 </div>
 
@@ -322,194 +323,16 @@ HELP
 This content is provided for educational and experimental purposes.
 </div>
 
-<!-- PROJECT WINDOW (POPUP TAB) -->
-<div class="overlay" id="overlay">
-  <div class="tab">
-    <div class="close-btn" onclick="closeProject()">X</div>
-
-    <h2 id="projTitle"></h2>
-    <div id="projDesc"></div>
-
-    <p>
-      Source code:<br>
-      <a id="projLink" class="link" href="#" target="_blank">View on GitHub</a>
-    </p>
-  </div>
-</div>
-
-<!-- ERROR POPUP -->
-<div id="errorPopup">
-  <div id="errorBox">
-    <div id="errorTop">
-      <span>ERROR</span>
-      <span id="errorClose" onclick="closeError()">X</span>
-    </div>
-    <div id="errorBody">
-      DO YOU ALREADY<br>
-      FOLLOW @daan_tech1<br>
-      ON YOUTUBE?
-    </div>
-  </div>
-</div>
-
 <footer>
 © 2026 Daan Tech — Terminal Interface
 </footer>
 
 <script>
 /* PAGE NAV */
-function showPage(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  const el = document.getElementById(id);
-  if (el) el.classList.add('active');
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
 }
-
-/* PROJECT DATA */
-const projects = {
-  jammer: {
-    title: "01. ESP32-C3 Super Mini Jammer",
-    desc: `
-<p>ESP32-C3 based experimental wireless project for educational and research purposes.</p>
-
-<h3>Pin Connections</h3>
-<table>
-<tr><th>ESP32-C3</th><th>NRF24</th></tr>
-<tr><td>GPIO 4</td><td>SCK</td></tr>
-<tr><td>GPIO 5</td><td>MISO</td></tr>
-<tr><td>GPIO 6</td><td>MOSI</td></tr>
-<tr><td>GPIO 20</td><td>CE</td></tr>
-<tr><td>GPIO 21</td><td>CSN</td></tr>
-</table>
-`,
-    link: "https://github.com/daantech1/esp32-c3-jammer/blob/main/ESP32C3superminijammer.ino"
-  },
-  matrix: {
-    title: "02. WiFi 8x8 Matrix Panel",
-    desc: `
-<p>ESP32 powered dual 8x8 LED matrix panel with WiFi AP, web interface, NTP time sync and scrolling text.</p>
-
-<h3>Pin Connections</h3>
-<table>
-<tr><th>ESP32</th><th>Matrix</th></tr>
-<tr><td>GPIO 23</td><td>DIN</td></tr>
-<tr><td>GPIO 18</td><td>CLK</td></tr>
-<tr><td>GPIO 5</td><td>CS1 (left)</td></tr>
-<tr><td>GPIO 4</td><td>CS2 (right)</td></tr>
-</table>
-`,
-    link: "https://github.com/daantech1/esp32-8x8-matrix-wifi-panel/blob/main/sour_apple_esp32.ino"
-  },
-  tesla: {
-    title: "03. Arduino Nano CC1101 Tesla Charging Port Opener",
-    desc: `
-<p>This file is made for Arduino NANO, it will power a CC1101 to open a Tesla charging port.</p>
-
-<h3>Pin Connections</h3>
-<table>
-<tr><th>Arduino Nano</th><th>CC1101</th></tr>
-<tr><td>D2</td><td>GDO0</td></tr>
-<tr><td>D3</td><td>GDO2</td></tr>
-<tr><td>D10</td><td>CSN/CS</td></tr>
-<tr><td>D11</td><td>MOSI</td></tr>
-<tr><td>D12</td><td>MISO</td></tr>
-<tr><td>D13</td><td>SCK</td></tr>
-<tr><td>3.3V</td><td>VCC (do NOT use 5V)</td></tr>
-<tr><td>GND</td><td>GND</td></tr>
-<tr><td>3.3V</td><td>VCO/VCC_RF (if present)</td></tr>
-</table>
-`,
-    link: "https://github.com/daantech1/arduino-nano-cc1101-Tesla-charging-port-opener/blob/main/EU_T_opener_ArduinoNano_CC1101"
-  }
-};
-
-function openProject(key) {
-  document.getElementById("projTitle").innerText = projects[key].title;
-  document.getElementById("projDesc").innerHTML = projects[key].desc;
-  document.getElementById("projLink").href = projects[key].link;
-  document.getElementById("overlay").style.display = "flex";
-}
-
-function closeProject() {
-  document.getElementById("overlay").style.display = "none";
-}
-
-/* STATUS TYPING */
-const statusEl = document.getElementById("status");
-const word = "ONLINE";
-let idx = 0;
-let typing = true;
-
-(function typeLoop() {
-  if (typing) {
-    if (idx < word.length) {
-      statusEl.textContent += word.charAt(idx);
-      idx++;
-    } else {
-      setTimeout(() => typing = false, 1200);
-    }
-  } else {
-    if (idx > 0) {
-      statusEl.textContent = statusEl.textContent.slice(0, -1);
-      idx--;
-    } else {
-      setTimeout(() => typing = true, 800);
-    }
-  }
-  setTimeout(typeLoop, typing ? 120 : 80);
-})();
-
-/* ERROR POPUP TIMER */
-setTimeout(() => {
-  const p = document.getElementById("errorPopup");
-  p.style.display = "flex";
-  p.style.pointerEvents = "auto";
-}, 30000);
-
-function closeError() {
-  const p = document.getElementById("errorPopup");
-  p.style.display = "none";
-  p.style.pointerEvents = "none";
-}
-
-/* MATRIX RAIN */
-const canvas = document.getElementById("matrix");
-const ctx = canvas.getContext("2d");
-
-function resize() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-resize();
-window.addEventListener("resize", resize);
-
-const letters = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ@#$%";
-const fontSize = 14;
-
-function resetDrops() {
-  const columns = Math.floor(canvas.width / fontSize);
-  return Array(columns).fill(1);
-}
-
-let drops = resetDrops();
-window.addEventListener("resize", () => { drops = resetDrops(); });
-
-setInterval(() => {
-  ctx.fillStyle = "rgba(0,0,0,0.05)";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  ctx.fillStyle = "#00ff66";
-  ctx.font = fontSize + "px monospace";
-
-  for (let i = 0; i < drops.length; i++) {
-    const char = letters[Math.floor(Math.random() * letters.length)];
-    ctx.fillText(char, i * fontSize, drops[i] * fontSize);
-
-    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-      drops[i] = 0;
-    }
-    drops[i]++;
-  }
-}, 33);
 </script>
 
 </body>
